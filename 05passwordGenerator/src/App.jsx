@@ -1,31 +1,36 @@
-import { useState, useCallback,useEffect } from "react";
+import { useState, useCallback, useEffect, useRef} from "react";
 import "./App.css";
 
 function App() {
- 
   const [length, setLength] = useState(8);
-  const [numberAllowed, setNumberAllowed  ] = useState(false);
+  const [numberAllowed, setNumberAllowed] = useState(false);
   const [charAllowed, setCharAllowed] = useState(false);
   const [password, setPassword] = useState("");
+  const passwordRef = useRef(null);
+  
+  const copyPasswordToClickboard = useCallback(() => {
+    passwordRef.current?.select();
+    passwordRef.current?.setSelectionRange(0,101);
+    window.navigator.clipboard.writeText(password);
+  },[password]);
 
   const passwordGenerator = useCallback(() => {
-      let pass = ""
-      let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-      if (numberAllowed) str+="0123456789";
-      if (charAllowed) str+="!#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+    let pass = "";
+    let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    if (numberAllowed) str += "0123456789";
+    if (charAllowed) str += "!#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 
-      for (let i = 1; i <= length; i++) {
-        let index = Math.floor(Math.random() * str.length + 1)
-        pass += str.charAt(index);
-      }
+    for (let i = 1; i <= length; i++) {
+      let index = Math.floor(Math.random() * str.length + 1);
+      pass += str.charAt(index);
+    }
 
-      setPassword(pass);
-
-  },[length,numberAllowed,charAllowed,setPassword])
+    setPassword(pass);
+  }, [length, numberAllowed, charAllowed, setPassword]);
 
   useEffect(() => {
-    passwordGenerator()
-  }, [length, numberAllowed,charAllowed,passwordGenerator]);
+    passwordGenerator();
+  }, [length, numberAllowed, charAllowed, passwordGenerator]);
 
   return (
     <>
@@ -42,10 +47,12 @@ function App() {
               type="text"
               value={password}
               placeholder="password"
+              ref={passwordRef}
               className="text-red outline-none text-orange-500 text-[20px] pl-3 w-full rounded-l-md"
               readOnly
             />
-            <button className="bg-blue-500 w-[60px] h-full rounded-r-md pb-1">
+            <button className="bg-blue-500 w-[60px] h-full rounded-r-md pb-1 active:bg-violet-700"
+            onClick={copyPasswordToClickboard}>
               copy
             </button>
           </div>
@@ -56,7 +63,9 @@ function App() {
               min={6}
               max={100}
               value={length}
-              onChange={(e) => {setLength(e.target.value)}}
+              onChange={(e) => {
+                setLength(e.target.value);
+              }}
             />
             <label className="ml-[-13px]">Length:({length})</label>
             <div>
@@ -66,7 +75,7 @@ function App() {
                 id="numberInput"
                 className="accent-blue-500"
                 onChange={() => {
-                  setNumberAllowed((prev) => !prev)
+                  setNumberAllowed((prev) => !prev);
                 }}
               />{" "}
               <label className="ml-0.3">Number</label>{" "}
@@ -78,7 +87,7 @@ function App() {
                 id="charInput"
                 className="accent-blue-500"
                 onChange={() => {
-                  setCharAllowed((prev) => !prev)
+                  setCharAllowed((prev) => !prev);
                 }}
               />{" "}
               <label className="ml-0.4">Character</label>{" "}
