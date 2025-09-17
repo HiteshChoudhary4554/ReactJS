@@ -3,9 +3,9 @@ Bootstrap add in vite project
 
 2. import files ..
   // Bootstrap CSS
-  import 'bootstrap/dist/css/bootstrap.min.css'
+3. import 'bootstrap/dist/css/bootstrap.min.css'
 
-  // (optional) Bootstrap JS bundle (agar dropdown, modal jaise JS components chahiye)
-  import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+// (optional) Bootstrap JS bundle (agar dropdown, modal jaise JS components chahiye)
+4. import 'bootstrap/dist/js/bootstrap.bundle.min.js'
   
-3. then use css 
+5. then use css 
